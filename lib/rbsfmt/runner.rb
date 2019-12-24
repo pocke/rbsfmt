@@ -28,9 +28,22 @@ module Rbsfmt
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end')
       when Ruby::Signature::AST::Members::MethodDefinition
-        @tokens << raw('def') << [:space_or_newline] << raw(node.name.to_s) << [:nothing_or_newline] << raw(':') << [:space_or_newline] << raw('(')
+        @tokens << raw('def') << [:space_or_newline] << raw(node.name.to_s) << [:nothing_or_newline] << raw(':') << [:space_or_newline]
+        node.types.each do |type|
+          format type
+        end
+        @tokens << [:newline]
+      when Ruby::Signature::MethodType
+        format node.type
+      when Ruby::Signature::Types::Function
+        @tokens << raw('(')
         # TODO: args
-        @tokens << raw(")") << [:space_or_newline] << raw('->') << [:space_or_newline] << raw('void') << [:newline]
+        @tokens << raw(")") << [:space_or_newline] << raw('->') << [:space_or_newline]
+        format node.return_type
+      when Ruby::Signature::Types::Bases::Void
+        @tokens << raw('void')
+      when Ruby::Signature::Types::Bases::Any
+        @tokens << raw('untyped')
       else
         raise "Unknown node: #{node.class}"
       end
