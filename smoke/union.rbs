@@ -1,0 +1,5 @@
+class C
+  def foo: (String | Integer) -> void
+  def bar: (String | Integer, Regexp | Pathname) -> void
+  def baz: (String | Integer a) -> void
+end

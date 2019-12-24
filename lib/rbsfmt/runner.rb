@@ -55,6 +55,11 @@ module Rbsfmt
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)
+      when Ruby::Signature::Types::Union
+        node.types.each.with_index do |type, idx|
+          format type
+          @tokens << [:space_or_newline] << raw("|") << [:space_or_newline] unless idx == node.types.size - 1
+        end
       else
         raise "Unknown node: #{node.class}"
       end
