@@ -46,8 +46,8 @@ module Rbsfmt
         @tokens << raw(")") << [:space_or_newline] << raw('->') << [:space_or_newline]
         format node.return_type
       when Ruby::Signature::Types::Function::Param
-        # TODO: name
         format node.type
+        @tokens << [:space_or_newline] << raw(node.name.to_s) if node.name
       when Ruby::Signature::Types::Bases::Void
         @tokens << raw('void')
       when Ruby::Signature::Types::Bases::Any

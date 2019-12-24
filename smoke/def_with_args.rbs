@@ -1,4 +1,6 @@
 class Foo
   def foo: (String) -> void
   def bar: (String, Integer) -> void
+  def with_name: (String x) -> void
+  def with_name2: (String x, Integer y) -> void
 end
