@@ -3,6 +3,11 @@ PATH
   specs:
     rbsfmt (0.1.0)
 
+PATH
+  remote: vendor/ruby-signature
+  specs:
+    ruby-signature (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -14,6 +19,7 @@ PLATFORMS
 DEPENDENCIES
   rake (~> 12.0)
   rbsfmt!
+  ruby-signature!
 
 BUNDLED WITH
    2.1.1
