@@ -44,6 +44,8 @@ module Rbsfmt
         @tokens << raw('void')
       when Ruby::Signature::Types::Bases::Any
         @tokens << raw('untyped')
+      when Ruby::Signature::Types::ClassInstance
+        @tokens << raw(node.name.to_s)
       else
         raise "Unknown node: #{node.class}"
       end

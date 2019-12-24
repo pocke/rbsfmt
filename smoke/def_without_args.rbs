@@ -1,0 +1,7 @@
+class C
+  def foo: () -> void
+  def bar: () -> untyped
+  def baz: () -> String
+  def foobar: () -> NS::Foo
+  def foobar2: () -> ::NS::Foo
+end
