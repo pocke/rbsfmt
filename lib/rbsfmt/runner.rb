@@ -37,9 +37,17 @@ module Rbsfmt
         format node.type
       when Ruby::Signature::Types::Function
         @tokens << raw('(')
-        # TODO: args
+        # TODO: other args
+        node.required_positionals.each.with_index do |arg, idx|
+          format arg
+          # FIXME: trailing comma with multiline
+          @tokens << raw(',') << [:space_or_newline]  unless idx == node.required_positionals.size - 1
+        end
         @tokens << raw(")") << [:space_or_newline] << raw('->') << [:space_or_newline]
         format node.return_type
+      when Ruby::Signature::Types::Function::Param
+        # TODO: name
+        format node.type
       when Ruby::Signature::Types::Bases::Void
         @tokens << raw('void')
       when Ruby::Signature::Types::Bases::Any
