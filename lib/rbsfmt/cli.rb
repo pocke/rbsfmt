@@ -5,6 +5,8 @@ module Rbsfmt
     end
 
     def run
+      fname = @argv.first
+      Runner.new(File.read(fname)).run
     end
   end
 end

@@ -1,6 +1,8 @@
+require 'ruby/signature'
+
 require "rbsfmt/version"
 require 'rbsfmt/cli'
-require 'ruby/signature'
+require 'rbsfmt/runner'
 
 module Rbsfmt
   class Error < StandardError; end
