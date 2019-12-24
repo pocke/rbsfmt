@@ -1,0 +1,30 @@
+#!ruby
+
+$LOAD_PATH.unshift("#{__dir__}/../lib")
+
+require 'rbsfmt'
+require 'stringio'
+require 'tempfile'
+
+ARGV.each do |f|
+  print "#{f} "
+
+  content = File.read(f)
+  io = StringIO.new
+  Rbsfmt::Runner.new(content, out: io).run
+  if io.string != content
+    Tempfile.create do |expected|
+      expected.write content
+      expected.flush
+      Tempfile.create do |got|
+        got.write io.string
+        got.flush
+
+        puts "❌"
+        system('git', 'diff', '--no-index', expected.path, got.path)
+      end
+    end
+  else
+    puts '⭕'
+  end
+end
