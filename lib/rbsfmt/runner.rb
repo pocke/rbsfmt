@@ -22,16 +22,19 @@ module Rbsfmt
     private def format(node)
       case node
       when Ruby::Signature::AST::Declarations::Class
-        @tokens << raw('class') << [:space_or_newline] << raw(node.name.name.to_s) << indent(INDENT_WIDTH)
+        @tokens << raw('class') << [:space_or_newline] << raw(node.name.name.to_s) << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end')
       when Ruby::Signature::AST::Members::MethodDefinition
         @tokens << raw('def') << [:space_or_newline] << raw(node.name.to_s) << [:nothing_or_newline] << raw(':') << [:space_or_newline]
-        node.types.each do |type|
+        @tokens << indent(4 + node.name.to_s.size)
+        node.types.each.with_index do |type, idx|
           format type
+          @tokens << [:newline] << raw("|") << [:space_or_newline] unless idx == node.types.size - 1
         end
+        @tokens << [:dedent, 4 + node.name.to_s.size]
         @tokens << [:newline]
       when Ruby::Signature::MethodType
         format node.type
@@ -77,8 +80,6 @@ module Rbsfmt
           # TODO
         when :indent
           indent += tok[1]
-          res << "\n"
-          do_indent = true
         when :dedent
           indent -= tok[1]
         else

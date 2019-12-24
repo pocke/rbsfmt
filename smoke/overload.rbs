@@ -1,0 +1,4 @@
+class C
+  def foo: () -> void
+         | () -> untyped
+end
