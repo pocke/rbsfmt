@@ -1,0 +1,7 @@
+#!ruby
+
+$LOAD_PATH.unshift("#{__dir__}/../lib")
+
+require 'rbsfmt'
+
+Rbsfmt::CLI.new(ARGV).run
