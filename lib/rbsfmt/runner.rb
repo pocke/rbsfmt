@@ -22,15 +22,15 @@ module Rbsfmt
     private def format(node)
       case node
       when Ruby::Signature::AST::Declarations::Class
-        @tokens << [:raw, 'class'] << [:space_or_newline] << [:raw, node.name.name.to_s] << [:indent, INDENT_WIDTH]
+        @tokens << raw('class') << [:space_or_newline] << raw(node.name.name.to_s) << [:indent, INDENT_WIDTH]
         node.members.each do |member|
           format member
         end
-        @tokens << [:dedent, INDENT_WIDTH] << [:raw, 'end']
+        @tokens << [:dedent, INDENT_WIDTH] << raw('end')
       when Ruby::Signature::AST::Members::MethodDefinition
-        @tokens << [:raw, 'def'] << [:space_or_newline] << [:raw, node.name.to_s] << [:nothing_or_newline] << [:raw, ':'] << [:space_or_newline] << [:raw, '(']
+        @tokens << raw('def') << [:space_or_newline] << raw(node.name.to_s) << [:nothing_or_newline] << raw(':') << [:space_or_newline] << raw('(')
         # TODO: args
-        @tokens << [:raw, ")"] << [:space_or_newline] << [:raw, '->'] << [:space_or_newline] << [:raw, 'void'] << [:newline]
+        @tokens << raw(")") << [:space_or_newline] << raw('->') << [:space_or_newline] << raw('void') << [:newline]
       else
         raise "Unknown node: #{node.class}"
       end
@@ -66,6 +66,10 @@ module Rbsfmt
       end
 
       res
+    end
+
+    private def raw(tok)
+      [:raw, tok]
     end
   end
 end
