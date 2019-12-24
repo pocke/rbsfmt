@@ -22,7 +22,7 @@ module Rbsfmt
     private def format(node)
       case node
       when Ruby::Signature::AST::Declarations::Class
-        @tokens << raw('class') << [:space_or_newline] << raw(node.name.name.to_s) << [:indent, INDENT_WIDTH]
+        @tokens << raw('class') << [:space_or_newline] << raw(node.name.name.to_s) << indent(INDENT_WIDTH)
         node.members.each do |member|
           format member
         end
@@ -68,8 +68,14 @@ module Rbsfmt
       res
     end
 
+    # --- token helpers
+
     private def raw(tok)
       [:raw, tok]
+    end
+
+    private def indent(width)
+      [:indent, width]
     end
   end
 end
