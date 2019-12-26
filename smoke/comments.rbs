@@ -1,0 +1,8 @@
+# comment for class
+class C
+  # comment
+  def foo: () -> void
+  # multiline
+  # comment
+  def bar: () -> void
+end
