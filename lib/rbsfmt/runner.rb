@@ -29,17 +29,31 @@ module Rbsfmt
       preserve_comments node
       case node
       when Ruby::Signature::AST::Declarations::Class
-        @tokens << raw('class') << [:space] << raw(node.name.name.to_s) << indent(INDENT_WIDTH) << [:newline]
+        @tokens << raw('class') << [:space] << raw(node.name.name.to_s)
+        format node.type_params
+        @tokens << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
       when Ruby::Signature::AST::Declarations::Module
-        @tokens << raw('module') << [:space] << raw(node.name.name.to_s) << indent(INDENT_WIDTH) << [:newline]
+        @tokens << raw('module') << [:space] << raw(node.name.name.to_s)
+        format node.type_params
+        @tokens << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
+      when Ruby::Signature::AST::Declarations::ModuleTypeParams
+        params = node.params
+        unless params.empty?
+          @tokens << raw('[')
+          params.each.with_index do |t, idx|
+            @tokens << raw(t.name.to_s)
+            @tokens << raw(",") << [:space] unless idx == params.size - 1
+          end
+          @tokens << raw(']')
+        end
       when Ruby::Signature::AST::Members::MethodDefinition
         @tokens << raw('def') << [:space] << raw(node.name.to_s) << raw(':') << [:space]
         @tokens << indent(4 + node.name.to_s.size)
@@ -64,7 +78,8 @@ module Rbsfmt
       when Ruby::Signature::Types::Function::Param
         format node.type
         @tokens << [:space] << raw(node.name.to_s) if node.name
-      when Ruby::Signature::Types::Bases::Base # any, void, etc.
+      when Ruby::Signature::Types::Bases::Base, # any, void, etc.
+           Ruby::Signature::Types::Variable
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)

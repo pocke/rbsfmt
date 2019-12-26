@@ -1,0 +1,7 @@
+class C[T]
+  def foo: (T) -> T
+end
+
+module M[T, U]
+  def foo: (T) -> U
+end
