@@ -1,0 +1,7 @@
+interface _ToI
+  def to_i: () -> Integer
+end
+
+interface _Foo[A]
+  def foo: (A) -> Integer
+end
