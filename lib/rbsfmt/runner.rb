@@ -72,6 +72,20 @@ module Rbsfmt
         @tokens << [:newline]
       when Ruby::Signature::AST::Members::Alias
         @tokens << raw('alias') << [:space] << raw(node.new_name.to_s) << [:space] << raw(node.old_name.to_s) << [:newline]
+      when Ruby::Signature::AST::Members::Include
+        @tokens << raw('include') << [:space]
+        format node.name
+        unless node.args.empty?
+          @tokens << raw('[')
+          node.args.each.with_index do |t, idx|
+            format t
+            @tokens << raw(',') << [:space] unless idx == node.args.size - 1
+          end
+          @tokens << raw(']')
+        end
+        @tokens << [:newline]
+      when Ruby::Signature::TypeName
+        @tokens << raw(node.to_s)
       when Ruby::Signature::MethodType
         unless node.type_params.empty?
           @tokens << raw('[')

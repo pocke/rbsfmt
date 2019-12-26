@@ -1,0 +1,7 @@
+class A
+  include B
+  include B::C
+  include ::B::C
+  include X[Y]
+  include X[Y, Z]
+end
