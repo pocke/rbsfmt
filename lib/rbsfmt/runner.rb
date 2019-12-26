@@ -22,6 +22,7 @@ module Rbsfmt
       case node
       when Ruby::Signature::AST::Declarations::Class,
            Ruby::Signature::AST::Declarations::Module,
+           Ruby::Signature::AST::Declarations::Constant,
            Ruby::Signature::AST::Members::MethodDefinition
         preserve_empty_line(node)
       end
@@ -44,6 +45,10 @@ module Rbsfmt
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
+      when Ruby::Signature::AST::Declarations::Constant
+        @tokens << raw(node.name.to_s) << raw(':') << [:space]
+        format node.type
+        @tokens << [:newline]
       when Ruby::Signature::AST::Declarations::ModuleTypeParams
         params = node.params
         unless params.empty?
