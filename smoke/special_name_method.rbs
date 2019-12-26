@@ -1,0 +1,5 @@
+class C
+  def foo?: () -> void
+  def **: () -> void
+  def class: () -> void
+end
