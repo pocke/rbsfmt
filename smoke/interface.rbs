@@ -5,3 +5,7 @@ end
 interface _Foo[A]
   def foo: (A) -> Integer
 end
+
+class A
+  def foo: (_ToI) -> Integer
+end
