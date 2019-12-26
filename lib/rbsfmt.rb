@@ -1,4 +1,5 @@
 require 'ruby/signature'
+require 'optparse'
 
 require "rbsfmt/version"
 require 'rbsfmt/cli'
