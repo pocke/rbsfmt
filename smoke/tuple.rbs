@@ -1,0 +1,6 @@
+class C
+  def foo: ([ ] empty_tuple) -> [ ]
+  def bar: ([String] one_tuple) -> [Integer]
+  def baz: ([String, Integer] two_tuple) -> [Regexp, Foo]
+  def foobar: ([String, [String, Integer]]) -> [[Foo, Bar], Baz]
+end

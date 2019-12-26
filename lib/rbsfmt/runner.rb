@@ -93,6 +93,17 @@ module Rbsfmt
       when Ruby::Signature::Types::Optional
         format node.type
         @tokens << raw('?')
+      when Ruby::Signature::Types::Tuple
+        if node.types.empty?
+          @tokens << raw('[ ]')
+        else
+          @tokens << raw('[')
+          node.types.each.with_index do |t, idx|
+            format t
+            @tokens << raw(',') << [:space] unless idx == node.types.size - 1
+          end
+          @tokens << raw(']')
+        end
       else
         raise "Unknown node: #{node.class}"
       end
