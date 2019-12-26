@@ -2,7 +2,13 @@
 class C
   # comment
   def foo: () -> void
+
   # multiline
   # comment
   def bar: () -> void
+
+  # comment with
+
+  # an empty line
+  def baz: () -> void
 end

@@ -14,21 +14,25 @@ module Rbsfmt
       trees.each do |tree|
         format tree
       end
-      @tokens << [:newline] # EOF
 
       @out.write join_tokens @tokens
     end
 
     private def format(node)
-      preserve_comments node
+      case node
+      when Ruby::Signature::AST::Declarations::Class,
+           Ruby::Signature::AST::Members::MethodDefinition
+        preserve_empty_line(node)
+      end
 
+      preserve_comments node
       case node
       when Ruby::Signature::AST::Declarations::Class
         @tokens << raw('class') << [:space] << raw(node.name.name.to_s) << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|
           format member
         end
-        @tokens << [:dedent, INDENT_WIDTH] << raw('end')
+        @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
       when Ruby::Signature::AST::Members::MethodDefinition
         @tokens << raw('def') << [:space] << raw(node.name.to_s) << raw(':') << [:space]
         @tokens << indent(4 + node.name.to_s.size)
@@ -70,19 +74,29 @@ module Rbsfmt
     private def preserve_comments(node)
       return unless node.respond_to? :location
 
-      while !@comments.empty? && @comments.first[0] < node.location.start_line
-        comment = @comments.shift[1]
+      while !@remaining_comments.empty? && @remaining_comments.first[0] < node.location.start_line
+        comment = @remaining_comments.shift[1]
+        preserve_empty_line comment
         comment.string.each_line do |line|
           @tokens << [:raw, "# #{line.chomp}"] << [:newline]
         end
       end
     end
 
+    private def preserve_empty_line(node)
+      line = node.location.start_line - 2
+      return if line < 0
+
+      if @buffer.lines[line].strip.empty?
+        @tokens << [:newline]
+      end
+    end
+
     private def parse
-      buffer = Ruby::Signature::Buffer.new(name: nil, content: @original_source)
-      parser = Ruby::Signature::Parser.new(:SIGNATURE, buffer: buffer, eof_re: nil)
+      @buffer = Ruby::Signature::Buffer.new(name: nil, content: @original_source)
+      parser = Ruby::Signature::Parser.new(:SIGNATURE, buffer: @buffer, eof_re: nil)
       parser.do_parse.tap do
-        @comments = parser.instance_variable_get(:@comments).to_a
+        @remaining_comments = parser.instance_variable_get(:@comments).to_a
       end
     end
 
