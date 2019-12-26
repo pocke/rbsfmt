@@ -71,6 +71,14 @@ module Rbsfmt
       when Ruby::Signature::AST::Members::Alias
         @tokens << raw('alias') << [:space] << raw(node.new_name.to_s) << [:space] << raw(node.old_name.to_s) << [:newline]
       when Ruby::Signature::MethodType
+        unless node.type_params.empty?
+          @tokens << raw('[')
+          node.type_params.each.with_index do |t, idx|
+            @tokens << raw(t.to_s)
+            @tokens << raw(',') << [:space] unless idx == node.type_params.size - 1
+          end
+          @tokens << raw(']') << [:space]
+        end
         format node.type
         @tokens << [:space]
         if node.block
