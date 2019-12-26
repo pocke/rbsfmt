@@ -9,6 +9,7 @@ module Rbsfmt
 
     def run
       @tokens = []
+      @parent_stack = []
 
       trees = parse
       trees.each do |tree|
@@ -19,6 +20,7 @@ module Rbsfmt
     end
 
     private def format(node)
+      @parent_stack.push node
       case node
       when Ruby::Signature::AST::Declarations::Class,
            Ruby::Signature::AST::Declarations::Module,
@@ -147,10 +149,13 @@ module Rbsfmt
           @tokens << raw(']')
         end
       when Ruby::Signature::Types::Union
+        wrap = parent.is_a?(Ruby::Signature::MethodType) && parent.type.return_type.equal?(node)
+        @tokens << raw('(') if wrap
         node.types.each.with_index do |type, idx|
           format type
           @tokens << [:space] << raw("|") << [:space] unless idx == node.types.size - 1
         end
+        @tokens << raw(')') if wrap
       when Ruby::Signature::Types::Optional
         format node.type
         @tokens << raw('?')
@@ -168,6 +173,8 @@ module Rbsfmt
       else
         raise "Unknown node: #{node.class}"
       end
+    ensure
+      @parent_stack.pop
     end
 
     private def preserve_comments(node)
@@ -197,6 +204,10 @@ module Rbsfmt
       parser.do_parse.tap do
         @remaining_comments = parser.instance_variable_get(:@comments).to_a
       end
+    end
+
+    private def parent
+      @parent_stack[-2]
     end
 
     private def join_tokens(tokens)
