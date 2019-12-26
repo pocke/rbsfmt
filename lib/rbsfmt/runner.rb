@@ -119,6 +119,14 @@ module Rbsfmt
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)
+        unless node.args.empty?
+          @tokens << raw('[')
+          node.args.each.with_index do |args, idx|
+            format args
+            @tokens << raw(',') << [:space] unless idx == node.args.size - 1
+          end
+          @tokens << raw(']')
+        end
       when Ruby::Signature::Types::Union
         node.types.each.with_index do |type, idx|
           format type

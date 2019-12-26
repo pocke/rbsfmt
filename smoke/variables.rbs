@@ -4,4 +4,6 @@ end
 
 module M[T, U]
   def foo: (T) -> U
+
+  def bar: (Array[Integer] n) -> Hash[Symbol, String]
 end
