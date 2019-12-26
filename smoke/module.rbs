@@ -1,0 +1,3 @@
+module Moo
+  def foo: () -> void
+end
