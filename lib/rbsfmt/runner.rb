@@ -74,12 +74,41 @@ module Rbsfmt
         format node.type
       when Ruby::Signature::Types::Function
         @tokens << raw('(')
-        # TODO: other args
-        node.required_positionals.each.with_index do |arg, idx|
+        # FIXME: trailing comma with multiline
+        all_params = [*node.required_positionals, *node.optional_positionals, node.rest_positionals, *node.trailing_positionals, *node.required_keywords.map(&:last), *node.optional_keywords.map(&:last), node.rest_keywords].compact
+        node.required_positionals.each do |arg|
           format arg
-          # FIXME: trailing comma with multiline
-          @tokens << raw(',') << [:space]  unless idx == node.required_positionals.size - 1
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
         end
+        node.optional_positionals.each do |arg|
+          @tokens << raw('?')
+          format arg
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
+        end
+        if node.rest_positionals
+          @tokens << raw('*')
+          format node.rest_positionals
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(node.rest_positionals) } == all_params.size - 1
+        end
+        node.trailing_positionals.each do |arg|
+          format arg
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
+        end
+        node.required_keywords.each do |name, arg|
+          @tokens << raw(name.to_s) << raw(':') << [:space]
+          format arg
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
+        end
+        node.optional_keywords.each do |name, arg|
+          @tokens << raw('?') << raw(name.to_s) << raw(':') << [:space]
+          format arg
+          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
+        end
+        if node.rest_keywords
+          @tokens << raw('**')
+          format node.rest_keywords
+        end
+
         @tokens << raw(")") << [:space] << raw('->') << [:space]
         format node.return_type
       when Ruby::Signature::Types::Function::Param

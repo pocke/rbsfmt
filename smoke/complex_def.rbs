@@ -1,0 +1,3 @@
+class Foo
+  def foo: (String, ?String, *Integer, Foo, kw: String, ?kw: String, **String) -> void
+end
