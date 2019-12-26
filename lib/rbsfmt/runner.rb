@@ -197,6 +197,10 @@ module Rbsfmt
           end
           @tokens << raw(']')
         end
+      when Ruby::Signature::Types::ClassSingleton
+        @tokens << raw('singleton(')
+        format node.name
+        @tokens << raw(')')
       else
         raise "Unknown node: #{node.class}"
       end
