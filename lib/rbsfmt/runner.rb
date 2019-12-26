@@ -73,6 +73,9 @@ module Rbsfmt
           format type
           @tokens << [:space] << raw("|") << [:space] unless idx == node.types.size - 1
         end
+      when Ruby::Signature::Types::Optional
+        format node.type
+        @tokens << raw('?')
       else
         raise "Unknown node: #{node.class}"
       end

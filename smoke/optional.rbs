@@ -1,0 +1,4 @@
+class C
+  def foo: (String?) -> Integer?
+  def bar: (String? arg0) -> Integer?
+end
