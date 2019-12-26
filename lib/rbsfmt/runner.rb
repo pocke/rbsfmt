@@ -84,6 +84,10 @@ module Rbsfmt
           @tokens << raw(']')
         end
         @tokens << [:newline]
+      when Ruby::Signature::AST::Members::Private
+        @tokens << raw('private') << [:newline]
+      when Ruby::Signature::AST::Members::Public
+        @tokens << raw('public') << [:newline]
       when Ruby::Signature::TypeName
         @tokens << raw(node.to_s)
       when Ruby::Signature::MethodType
