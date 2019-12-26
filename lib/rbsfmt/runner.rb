@@ -72,6 +72,19 @@ module Rbsfmt
         @tokens << raw('alias') << [:space] << raw(node.new_name.to_s) << [:space] << raw(node.old_name.to_s) << [:newline]
       when Ruby::Signature::MethodType
         format node.type
+        @tokens << [:space]
+        if node.block
+          format node.block
+          @tokens << [:space]
+        end
+        @tokens << raw('->') << [:space]
+        format node.type.return_type
+      when Ruby::Signature::MethodType::Block
+        @tokens << raw("{") << [:space]
+        format node.type
+        @tokens << [:space] << raw('->') << [:space]
+        format node.type.return_type
+        @tokens << [:space] << raw("}")
       when Ruby::Signature::Types::Function
         @tokens << raw('(')
         # FIXME: trailing comma with multiline
@@ -108,9 +121,7 @@ module Rbsfmt
           @tokens << raw('**')
           format node.rest_keywords
         end
-
-        @tokens << raw(")") << [:space] << raw('->') << [:space]
-        format node.return_type
+        @tokens << raw(")")
       when Ruby::Signature::Types::Function::Param
         format node.type
         @tokens << [:space] << raw(node.name.to_s) if node.name
