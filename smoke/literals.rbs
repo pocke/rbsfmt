@@ -1,0 +1,8 @@
+class C
+  def foo: (String) -> 1
+         | (String) -> "1"
+         | (String) -> :foo
+         | (String) -> true
+         | (String) -> false
+         | (String) -> nil
+end

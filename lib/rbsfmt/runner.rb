@@ -164,7 +164,8 @@ module Rbsfmt
         @tokens << [:space] << raw(node.name.to_s) if node.name
       when Ruby::Signature::Types::Bases::Base, # any, void, etc.
            Ruby::Signature::Types::Variable,
-           Ruby::Signature::Types::Interface
+           Ruby::Signature::Types::Interface,
+           Ruby::Signature::Types::Literal
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)
