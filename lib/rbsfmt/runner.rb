@@ -63,6 +63,8 @@ module Rbsfmt
         end
         @tokens << [:dedent, 4 + node.name.to_s.size]
         @tokens << [:newline]
+      when Ruby::Signature::AST::Members::Alias
+        @tokens << raw('alias') << [:space] << raw(node.new_name.to_s) << [:space] << raw(node.old_name.to_s) << [:newline]
       when Ruby::Signature::MethodType
         format node.type
       when Ruby::Signature::Types::Function
