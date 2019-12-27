@@ -74,11 +74,24 @@ module Rbsfmt
         unless params.empty?
           @tokens << raw('[')
           params.each.with_index do |t, idx|
-            @tokens << raw(t.name.to_s)
+            format t
             @tokens << raw(",") << [:space] unless idx == params.size - 1
           end
           @tokens << raw(']')
         end
+      when Ruby::Signature::AST::Declarations::ModuleTypeParams::TypeParam
+        @tokens << raw('unchecked') << [:space] if node.skip_validation
+        case node.variance
+        when :covariant
+          @tokens << raw('out') << [:space]
+        when :contravariant
+          @tokens << raw('in') << [:space]
+        when :invariant
+          # noop
+        else
+          raise "[BUG] unknown variance: #{node.variance}"
+        end
+        @tokens << raw(node.name.to_s)
       when Ruby::Signature::AST::Declarations::Alias
         @tokens << raw('type') << [:space]
         format node.name

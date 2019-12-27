@@ -10,3 +10,6 @@ module M[T, U]
   def baz: [V] (V) -> V
   def baz: [A, B] (A) -> B
 end
+
+class A[unchecked out Elem]
+end
