@@ -36,7 +36,8 @@ module Rbsfmt
       preserve_comments node
       case node
       when Ruby::Signature::AST::Declarations::Class
-        @tokens << raw('class') << [:space] << raw(node.name.name.to_s)
+        @tokens << raw('class') << [:space]
+        format node.name
         format node.type_params
         if node.super_class
           @tokens << [:space] << raw('<') << [:space]
@@ -58,7 +59,8 @@ module Rbsfmt
           @tokens << raw(']')
         end
       when Ruby::Signature::AST::Declarations::Module
-        @tokens << raw('module') << [:space] << raw(node.name.name.to_s)
+        @tokens << raw('module') << [:space]
+        format node.name
         format node.type_params
         @tokens << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|

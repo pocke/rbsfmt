@@ -1,0 +1,17 @@
+class A::B
+end
+class A::B::C
+end
+class ::A
+end
+class ::A::B
+end
+
+module A::B
+end
+module A::B::C
+end
+module ::A
+end
+module ::A::B
+end
