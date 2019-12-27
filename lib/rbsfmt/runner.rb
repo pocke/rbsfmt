@@ -26,6 +26,7 @@ module Rbsfmt
            Ruby::Signature::AST::Declarations::Module,
            Ruby::Signature::AST::Declarations::Interface,
            Ruby::Signature::AST::Declarations::Constant,
+           Ruby::Signature::AST::Declarations::Alias,
            Ruby::Signature::AST::Members::MethodDefinition
         preserve_empty_line(node)
       end
@@ -70,6 +71,12 @@ module Rbsfmt
           end
           @tokens << raw(']')
         end
+      when Ruby::Signature::AST::Declarations::Alias
+        @tokens << raw('type') << [:space]
+        format node.name
+        @tokens << [:space] << raw('=') << [:space]
+        format node.type
+        @tokens << [:newline]
       when Ruby::Signature::AST::Members::MethodDefinition
         @tokens << raw('def') << [:space] << raw(node.name.to_s) << raw(':') << [:space]
         @tokens << indent(4 + node.name.to_s.size)
@@ -170,7 +177,8 @@ module Rbsfmt
       when Ruby::Signature::Types::Bases::Base, # any, void, etc.
            Ruby::Signature::Types::Variable,
            Ruby::Signature::Types::Interface,
-           Ruby::Signature::Types::Literal
+           Ruby::Signature::Types::Literal,
+           Ruby::Signature::Types::Alias
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)
