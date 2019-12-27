@@ -2,4 +2,5 @@ class C
   def foo?: () -> void
   def **: () -> void
   def class: () -> void
+  def `self`: () -> void
 end

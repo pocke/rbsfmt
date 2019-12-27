@@ -128,7 +128,11 @@ module Rbsfmt
         else
           raise "[BUG] unknown kind: #{node.kind}"
         end
-        @tokens << raw(node.name.to_s) << raw(':') << [:space]
+        if node.name == :self
+          @tokens << raw("`#{node.name}`") << raw(':') << [:space]
+        else
+          @tokens << raw(node.name.to_s) << raw(':') << [:space]
+        end
         @tokens << indent(4 + node.name.to_s.size)
         node.types.each.with_index do |type, idx|
           format type
