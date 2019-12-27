@@ -1,4 +1,6 @@
 class C
   def foo: (String?) -> Integer?
   def bar: (String? arg0) -> Integer?
+  # :foo? is a literal, but :bar ? is a literal and optional
+  def baz: (:foo? arg0, :bar ? arg1) -> Integer
 end

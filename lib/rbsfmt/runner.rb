@@ -255,6 +255,9 @@ module Rbsfmt
         @tokens << raw(')') if wrap
       when Ruby::Signature::Types::Optional
         format node.type
+        if node.type.is_a?(Ruby::Signature::Types::Literal) && node.type.literal.is_a?(Symbol)
+          @tokens << [:space]
+        end
         @tokens << raw('?')
       when Ruby::Signature::Types::Tuple
         if node.types.empty?
