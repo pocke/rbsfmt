@@ -57,6 +57,14 @@ module Rbsfmt
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
+      when Ruby::Signature::AST::Declarations::Extension
+        @tokens << raw('extension') << [:space] << raw(node.name.name.to_s)
+        @tokens << [:space] << raw('(') << raw(node.extension_name.to_s) << raw(')')
+        @tokens << indent(INDENT_WIDTH) << [:newline]
+        node.members.each do |member|
+          format member
+        end
+        @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
       when Ruby::Signature::AST::Declarations::Constant
         @tokens << raw(node.name.to_s) << raw(':') << [:space]
         format node.type
