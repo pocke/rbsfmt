@@ -2,6 +2,9 @@ class Foo
   # complex args
   def foo: (String, ?String, *Integer, Foo, kw: String, ?kw: String, **String) { (String) -> untyped } -> void
 
+  # no-required block
+  def foo: () ?{ () -> void } -> void
+
   # multiple keyword arguments
   def foo: (kw1: String, ?kw2: String, kw3: String, ?kw4: String) -> void
   def foo: (kw1: String, ?kw2: String, kw3: String, ?kw4: String) -> void

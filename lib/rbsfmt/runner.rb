@@ -178,6 +178,7 @@ module Rbsfmt
         @tokens << raw('->') << [:space]
         format node.type.return_type
       when Ruby::Signature::MethodType::Block
+        @tokens << raw('?') unless node.required
         @tokens << raw("{") << [:space]
         format node.type
         @tokens << [:space] << raw('->') << [:space]
