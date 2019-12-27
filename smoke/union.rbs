@@ -2,5 +2,8 @@ class C
   def foo: (String | Integer) -> void
   def bar: (String | Integer, Regexp | Pathname) -> void
   def baz: (String | Integer a) -> void
+
   def union_ret: (String) -> (String | Integer)
+  def union_ret_in_block: (String) { (X) -> (A | B) } -> C
+  def union_ret_in_proc: (X) -> ^(X) -> (A | B)
 end

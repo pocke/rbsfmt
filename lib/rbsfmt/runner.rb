@@ -239,7 +239,7 @@ module Rbsfmt
           @tokens << raw(']')
         end
       when Ruby::Signature::Types::Union
-        wrap = parent.is_a?(Ruby::Signature::MethodType) && parent.type.return_type.equal?(node)
+        wrap = (parent.respond_to?(:type)) && (parent.type.respond_to?(:return_type)) && parent.type.return_type.equal?(node)
         @tokens << raw('(') if wrap
         node.types.each.with_index do |type, idx|
           format type
