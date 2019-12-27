@@ -86,7 +86,18 @@ module Rbsfmt
         format node.type
         @tokens << [:newline]
       when Ruby::Signature::AST::Members::MethodDefinition
-        @tokens << raw('def') << [:space] << raw(node.name.to_s) << raw(':') << [:space]
+        @tokens << raw('def') << [:space]
+        case node.kind
+        when :singleton
+          @tokens << raw('self.')
+        when :singleton_instance
+          @tokens << raw('self?.')
+        when :instance
+          # noop
+        else
+          raise "[BUG] unknown kind: #{node.kind}"
+        end
+        @tokens << raw(node.name.to_s) << raw(':') << [:space]
         @tokens << indent(4 + node.name.to_s.size)
         node.types.each.with_index do |type, idx|
           format type

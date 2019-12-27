@@ -1,3 +1,10 @@
 class Foo
+  # complex args
   def foo: (String, ?String, *Integer, Foo, kw: String, ?kw: String, **String) { (String) -> untyped } -> void
+
+  # singleton
+  def self.foo: () -> void
+
+  # singleton instance
+  def self?.foo: () -> void
 end
