@@ -6,4 +6,5 @@ class C
   def union_ret: (String) -> (String | Integer)
   def union_ret_in_block: (String) { (X) -> (A | B) } -> C
   def union_ret_in_proc: (X) -> ^(X) -> (A | B)
+  def union_in_optional: ((String | Integer)?, X | Y?) -> (A | B)?
 end
