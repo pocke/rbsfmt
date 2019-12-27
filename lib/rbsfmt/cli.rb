@@ -8,15 +8,16 @@ module Rbsfmt
       parse
       @args.each do |fname|
         $stderr.puts "Formatting #{fname}" if @params[:verbose]
+        content = File.read(fname)
         with_out(fname) do |out|
-          Runner.new(File.read(fname), out: out).run
+          Runner.new(content, out: out).run
         end
       end
     end
 
     private def with_out(fname, &block)
       if @params[:write]
-        File.open(fname, 'r+') do |f|
+        File.open(fname, 'w') do |f|
           block.call f
         end
       else
