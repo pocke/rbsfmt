@@ -1,5 +1,6 @@
 require 'ruby/signature'
 require 'optparse'
+require 'stringio'
 
 require "rbsfmt/version"
 require 'rbsfmt/cli'

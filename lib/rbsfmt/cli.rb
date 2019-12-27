@@ -9,19 +9,13 @@ module Rbsfmt
       @args.each do |fname|
         $stderr.puts "Formatting #{fname}" if @params[:verbose]
         content = File.read(fname)
-        with_out(fname) do |out|
-          Runner.new(content, out: out).run
+        buf = StringIO.new
+        Runner.new(content, out: buf).run
+        if @params[:write]
+          File.write(fname, buf.string)
+        else
+          $stdout.write(buf.string)
         end
-      end
-    end
-
-    private def with_out(fname, &block)
-      if @params[:write]
-        File.open(fname, 'w') do |f|
-          block.call f
-        end
-      else
-        block.call $stdout
       end
     end
 
