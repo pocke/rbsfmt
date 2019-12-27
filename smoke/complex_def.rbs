@@ -11,7 +11,9 @@ class Foo
 
   # singleton
   def self.foo: () -> void
+              | (String) -> void
 
   # singleton instance
   def self?.foo: () -> void
+               | (String) -> void
 end

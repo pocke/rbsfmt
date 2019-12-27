@@ -118,11 +118,14 @@ module Rbsfmt
         @tokens << [:newline]
       when Ruby::Signature::AST::Members::MethodDefinition
         @tokens << raw('def') << [:space]
+        offset = 4
         case node.kind
         when :singleton
           @tokens << raw('self.')
+          offset += 5
         when :singleton_instance
           @tokens << raw('self?.')
+          offset += 6
         when :instance
           # noop
         else
@@ -133,12 +136,13 @@ module Rbsfmt
         else
           @tokens << raw(node.name.to_s) << raw(':') << [:space]
         end
-        @tokens << indent(4 + node.name.to_s.size)
+        indent_width = offset + node.name.to_s.size
+        @tokens << indent(indent_width)
         node.types.each.with_index do |type, idx|
           format type
           @tokens << [:newline] << raw("|") << [:space] unless idx == node.types.size - 1
         end
-        @tokens << [:dedent, 4 + node.name.to_s.size]
+        @tokens << [:dedent, indent_width]
         @tokens << [:newline]
       when Ruby::Signature::AST::Members::Alias
         @tokens << raw('alias') << [:space] << raw(node.new_name.to_s) << [:space] << raw(node.old_name.to_s) << [:newline]
