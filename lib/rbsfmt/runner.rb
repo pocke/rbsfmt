@@ -36,11 +36,25 @@ module Rbsfmt
       when Ruby::Signature::AST::Declarations::Class
         @tokens << raw('class') << [:space] << raw(node.name.name.to_s)
         format node.type_params
+        if node.super_class
+          @tokens << [:space] << raw('<') << [:space]
+          format node.super_class
+        end
         @tokens << indent(INDENT_WIDTH) << [:newline]
         node.members.each do |member|
           format member
         end
         @tokens << [:dedent, INDENT_WIDTH] << raw('end') << [:newline]
+      when Ruby::Signature::AST::Declarations::Class::Super
+        @tokens << raw(node.name.to_s)
+        unless node.args.empty?
+          @tokens << raw('[')
+          node.args.each.with_index do |arg, idx|
+            format arg
+            @tokens << raw(',') << [:space] unless idx == node.args.size - 1
+          end
+          @tokens << raw(']')
+        end
       when Ruby::Signature::AST::Declarations::Module
         @tokens << raw('module') << [:space] << raw(node.name.name.to_s)
         format node.type_params

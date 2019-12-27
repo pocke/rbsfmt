@@ -1,0 +1,8 @@
+class A < B
+end
+
+class A[T] < B[T]
+end
+
+class A[T] < B[T, U]
+end
