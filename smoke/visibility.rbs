@@ -1,4 +1,10 @@
 class C
+  # comment
   private
+  public
+
+  # check empty line preserve
+  private
+
   public
 end

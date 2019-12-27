@@ -27,7 +27,9 @@ module Rbsfmt
            Ruby::Signature::AST::Declarations::Interface,
            Ruby::Signature::AST::Declarations::Constant,
            Ruby::Signature::AST::Declarations::Alias,
-           Ruby::Signature::AST::Members::MethodDefinition
+           Ruby::Signature::AST::Members::MethodDefinition,
+           Ruby::Signature::AST::Members::Private,
+           Ruby::Signature::AST::Members::Public
         preserve_empty_line(node)
       end
 
