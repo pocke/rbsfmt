@@ -185,14 +185,11 @@ module Rbsfmt
         @tokens << [:space] << raw("}")
       when Ruby::Signature::Types::Function
         @tokens << raw('(')
-        required_keywords = node.required_keywords.sort_by do |_name, arg|
-          arg.type.location.start_pos
-        end
-        optional_keywords = node.optional_keywords.sort_by do |_name, arg|
+        keywords = [*node.required_keywords, *node.optional_keywords].sort_by do |_name, arg|
           arg.type.location.start_pos
         end
         # FIXME: trailing comma with multiline
-        all_params = [*node.required_positionals, *node.optional_positionals, node.rest_positionals, *node.trailing_positionals, *required_keywords.map(&:last), *optional_keywords.map(&:last), node.rest_keywords].compact
+        all_params = [*node.required_positionals, *node.optional_positionals, node.rest_positionals, *node.trailing_positionals, *keywords.map(&:last), node.rest_keywords].compact
         node.required_positionals.each do |arg|
           format arg
           @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
@@ -211,13 +208,10 @@ module Rbsfmt
           format arg
           @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
         end
-        required_keywords.each do |name, arg|
+        optional_keywords = node.optional_keywords.values
+        keywords.each do |name, arg|
+          @tokens << raw("?") if optional_keywords.find{|x| x.equal?(arg)}
           @tokens << raw(name.to_s) << raw(':') << [:space]
-          format arg
-          @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
-        end
-        optional_keywords.each do |name, arg|
-          @tokens << raw('?') << raw(name.to_s) << raw(':') << [:space]
           format arg
           @tokens << raw(',') << [:space]  unless all_params.find_index { |x| x.equal?(arg) } == all_params.size - 1
         end
