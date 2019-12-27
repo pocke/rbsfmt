@@ -162,6 +162,11 @@ module Rbsfmt
       when Ruby::Signature::Types::Function::Param
         format node.type
         @tokens << [:space] << raw(node.name.to_s) if node.name
+      when Ruby::Signature::Types::Proc
+        @tokens << raw('^')
+        format node.type
+        @tokens << [:space] << raw('->') << [:space]
+        format node.type.return_type
       when Ruby::Signature::Types::Bases::Base, # any, void, etc.
            Ruby::Signature::Types::Variable,
            Ruby::Signature::Types::Interface,
