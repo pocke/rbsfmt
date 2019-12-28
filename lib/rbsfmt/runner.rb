@@ -237,7 +237,8 @@ module Rbsfmt
            Ruby::Signature::Types::Variable,
            Ruby::Signature::Types::Interface,
            Ruby::Signature::Types::Literal,
-           Ruby::Signature::Types::Alias
+           Ruby::Signature::Types::Alias,
+           Ruby::Signature::Types::ClassSingleton
         @tokens << raw(node.to_s)
       when Ruby::Signature::Types::ClassInstance
         @tokens << raw(node.name.to_s)
@@ -275,10 +276,6 @@ module Rbsfmt
           end
           @tokens << raw(']')
         end
-      when Ruby::Signature::Types::ClassSingleton
-        @tokens << raw('singleton(')
-        format node.name
-        @tokens << raw(')')
       else
         raise "Unknown node: #{node.class}"
       end
